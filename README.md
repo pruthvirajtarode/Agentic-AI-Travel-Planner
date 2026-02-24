@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+  <a href="https://agentic-ai-travel-planner.onrender.com/"><img src="https://img.shields.io/badge/Live-Demo-red?style=for-the-badge&logo=render" alt="Live Demo"></a>
   <a href="#-features"><img src="https://img.shields.io/badge/Features-Rich-blueviolet?style=for-the-badge&logo=stars" alt="Features"></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Tech-Modern-blue?style=for-the-badge&logo=python" alt="Tech Stack"></a>
   <a href="https://github.com/pruthvirajtarode/Agentic-AI-Travel-Planner"><img src="https://img.shields.io/badge/Open--Source-Yes-green?style=for-the-badge&logo=github" alt="Open Source"></a>
@@ -13,6 +14,10 @@
 ---
 
 ### <p align="center">✨ *Transforming the way you plan your adventures with autonomous AI agents.* ✨</p>
+
+<p align="center">
+  <b>🚀 [Try the Live Demo Here!](https://agentic-ai-travel-planner.onrender.com/)</b>
+</p>
 
 > **Agentic AI Travel Planner** is an intelligent, autonomous system that reasons like a travel expert. It uses **LangChain Agents**, **Claude 3.5 Sonnet**, and real-time data to create hyper-personalized itineraries in seconds.
 
