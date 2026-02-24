@@ -1,434 +1,180 @@
-# ✈️ Agentic AI-Based Travel Planning Assistant
+# <p align="center">✈️ Agentic AI Travel Planning Assistant</p>
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![LangChain](https://img.shields.io/badge/LangChain-Enabled-green.svg)
-![Streamlit](https://img.shields.io/badge/Streamlit-UI-red.svg)
-![Claude AI](https://img.shields.io/badge/Claude-AI-purple.svg)
+<p align="center">
+  <img src="ui/hero_banner.png" alt="Travel Planner Banner" width="100%">
+</p>
 
-> An intelligent, AI-powered travel planning system that autonomously creates personalized trip itineraries using LangChain agents, Claude AI, and real-time data integration.
-
----
-
-## 📋 Table of Contents
-- [Problem Statement](#problem-statement)
-- [Business Use Cases](#business-use-cases)
-- [Project Objectives](#project-objectives)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Installation & Setup](#installation--setup)
-- [How to Run](#how-to-run)
-- [Usage Guide](#usage-guide)
-- [Architecture](#architecture)
-- [Screenshots](#screenshots)
-- [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
+<p align="center">
+  <a href="#-features"><img src="https://img.shields.io/badge/Features-Rich-blueviolet?style=for-the-badge&logo=stars" alt="Features"></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Tech-Modern-blue?style=for-the-badge&logo=python" alt="Tech Stack"></a>
+  <a href="https://github.com/pruthvirajtarode/Agentic-AI-Travel-Planner"><img src="https://img.shields.io/badge/Open--Source-Yes-green?style=for-the-badge&logo=github" alt="Open Source"></a>
+</p>
 
 ---
 
-## 🎯 Problem Statement
+### <p align="center">✨ *Transforming the way you plan your adventures with autonomous AI agents.* ✨</p>
 
-Planning a trip requires choosing flights, hotels, and attractions while considering time, budget, weather, distance, and personal preferences. Travelers often:
-- Switch between multiple websites
-- Compare inconsistent information
-- Manually build itineraries that may be inefficient or unrealistic
-- Struggle with real-time information and optimization
-
-**Solution:** An intelligent, automated system that handles real-time information, reasons like a travel expert, and provides optimized itineraries tailored to user preferences.
+> **Agentic AI Travel Planner** is an intelligent, autonomous system that reasons like a travel expert. It uses **LangChain Agents**, **Claude 3.5 Sonnet**, and real-time data to create hyper-personalized itineraries in seconds.
 
 ---
 
-## 💼 Business Use Cases
-
-This AI Travel Agent can benefit:
-- **Travel Agencies** - Automate itinerary design
-- **Hotel Platforms** - Personalized recommendations
-- **Airline Aggregators** - Smart flight suggestions
-- **Tourism Companies** - Reduce customer support workload
-
-**Benefits:**
-- ✅ Reduce customer support workload
-- ✅ Provide personalized recommendations
-- ✅ Automate itinerary design
-- ✅ Improve customer satisfaction
-- ✅ Save users time and money
-
-Companies like **MakeMyTrip**, **Booking.com**, **ClearTrip**, and **Ixigo** are adopting similar AI-driven solutions.
+## 📖 Table of Contents
+<table align="center">
+  <tr>
+    <td width="33%"><a href="#-features">✨ Features</a></td>
+    <td width="33%"><a href="#-tech-stack">🛠️ Tech Stack</a></td>
+    <td width="33%"><a href="#-architecture">🏗️ Architecture</a></td>
+  </tr>
+  <tr>
+    <td width="33%"><a href="#-usage-guide">📖 Usage Guide</a></td>
+    <td width="33%"><a href="#-installation--setup">🚀 Installation</a></td>
+    <td width="33%"><a href="#-screenshots">📸 Screenshots</a></td>
+  </tr>
+</table>
 
 ---
 
-## 🎯 Project Objectives
+## 🎯 The Problem
+Planning a trip is often a stressful maze of switching between 20+ tabs, comparing inconsistent prices, and manually trying to piece together a realistic schedule. 
 
-### Primary Objectives
-1. ✅ Build an agentic AI system using LangChain with autonomous decision-making
-2. ✅ Integrate tools for:
-   - Flight search (JSON dataset)
-   - Hotel suggestions (JSON dataset)
-   - Places/POIs discovery (JSON dataset)
-   - Real-time weather (Open-Meteo API)
-3. ✅ Enable multi-step reasoning and decision-making (ReAct agents)
-4. ✅ Generate structured itineraries with:
-   - Day-wise plan
-   - Accommodation recommendations
-   - Weather forecasts
-   - Budget estimation
-
-### Secondary Objectives
-5. ✅ Implement filtering, ranking, and optimization
-6. ✅ System can justify decisions with AI reasoning
-7. ✅ Clean JSON + human-readable outputs
-8. ✅ Beautiful, interactive Streamlit interface
+**The Solution:** Our Agentic AI Assistant handles the heavy lifting—reasoning through budget, weather, and distance to deliver an optimized, ready-to-go plan.
 
 ---
 
 ## ✨ Features
 
-### 🌍 **NEW! Global Destination Support**
-> **Plan trips to ANY location worldwide!**  
-> The app now uses **AI-powered dynamic data generation** when cities are not in the database. Whether you're traveling from Nanded to Pune, Delhi to Dubai, or Mumbai to New York - the app automatically generates realistic flight, hotel, and attraction data for you!  
-> 📖 **[Learn more about Global Support →](GLOBAL_SUPPORT.md)**
+### 🌍 **Global Destination Support**
+*   **AI-Powered Dynamic Data:** Don't see your city in our JSON? No problem. The agent generates realistic data for *any* destination worldwide.
+*   **Real-time Intelligence:** Integrates live weather forecasts and optimized routing.
 
-### 🤖 AI-Powered Features
-- **Intelligent Trip Planning** - Claude AI analyzes preferences and creates optimal itineraries
-- **Multi-Tool Reasoning** - Agent autonomously decides which tools to use
-- **Personalized Recommendations** - Hotels, flights, and attractions tailored to your needs
-- **AI Insights** - Explains reasoning behind each recommendation
-- **Dynamic Data Generation** - Works for ANY city, even if not in database
+### 🤖 **Agentic Reasoning**
+*   **Autonomous Decisions:** The agent doesn't just follow a script; it decides which tools to call based on your unique needs.
+*   **Explainable AI:** Every recommendation comes with a "Reasoning" card explaining *why* it fits your trip.
 
-### 🗺️ Interactive Features
-- **Live Weather Integration** - Real-time forecasts using Open-Meteo API
-- **Interactive Map** - Visual route display with markers and flight paths
-- **Clickable Locations** - Direct Google Maps links for hotels and attractions
-- **Weather Charts** - Beautiful Plotly visualizations
-
-### 📊 Smart Tools
-- **Budget Breakdown** - Detailed cost analysis (flights, hotels, food, local transport)
-- **Smart Packing Checklist** - Weather-based packing recommendations
-- **Food Recommendations** - Location-specific cuisine suggestions
-- **Transportation Guide** - Local transport options and tips
-- **Travel Tips & Safety** - Expert advice for safe travel
-
-### 🎨 Premium UI/UX
-- **Animated Gradient Backgrounds** - Eye-catching visuals
-- **Glassmorphism Cards** - Modern, frosted glass effects
-- **Smooth Animations** - Float, pulse, and glow effects
-- **Responsive Design** - Works on all screen sizes
-- **Custom Scrollbar** - Gradient-themed scrolling
+### 🎨 **Premium UI/UX**
+*   **Glassmorphism Design:** Modern, frosted-glass interface built with Streamlit.
+*   **Interactive Maps:** Visualized travel routes using Folium.
+*   **Data Visualization:** Beautiful Plotly charts for weather and budget breakdowns.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|-----------|---------|
-| **Python 3.9+** | Core programming language |
-| **LangChain** | Agentic AI framework |
-| **Claude AI (Anthropic)** | Large Language Model |
-| **Streamlit** | Web application framework |
-| **Folium** | Interactive maps |
-| **Plotly** | Data visualization |
-| **Open-Meteo API** | Real-time weather data |
-| **JSON** | Data storage (flights, hotels, places) |
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" />
+  <img src="https://img.shields.io/badge/Claude--3.5-7431FA?style=for-the-badge&logo=anthropic&logoColor=white" />
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
+</p>
+
+| Category | Tools |
+| :--- | :--- |
+| **Orchestration** | LangChain, LangGraph |
+| **Brain (LLM)** | Claude 3.5 Sonnet (Anthropic) |
+| **Frontend** | Streamlit, Custom CSS |
+| **Visualization** | Plotly, Folium |
+| **Data** | JSON (Flight/Hotel/Places), Open-Meteo API |
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Architecture
 
-```
-Agentic_AI_Travel_Planner/
-│
-├── .venv/                      # Virtual environment
-├── agent/
-│   ├── __init__.py
-│   ├── agent.py                # Main trip planning logic
-│   ├── langchain_agent.py      # LangChain ReAct agent
-│   └── langchain_tools.py      # LangChain tool definitions
-│
-├── data/
-│   ├── flights.json            # Flight dataset
-│   ├── hotels.json             # Hotel dataset
-│   └── places.json             # Places/attractions dataset
-│
-├── tools/
-│   ├── __init__.py
-│   ├── flights.py              # Flight search tool
-│   ├── hotels.py               # Hotel recommendation tool
-│   ├── places.py               # Places discovery tool
-│   ├── weather.py              # Weather API integration
-│   └── budget.py               # Budget calculation tool
-│
-├── ui/
-│   ├── app.py                  # Streamlit application
-│   └── hero_banner.png         # Hero image
-│
-├── .env                        # Environment variables
-├── .gitignore
-├── README.md                   # This file
-└── requirements.txt            # Python dependencies
+```mermaid
+graph TD
+    User([User Input]) --> UI[Streamlit Interface]
+    UI --> Agent[LangChain ReAct Agent]
+    
+    subgraph "The Engine"
+    Agent <--> Brain{Claude 3.5 Sonnet}
+    Agent <--> Tools[Toolbox]
+    end
+    
+    subgraph "Tools"
+    Tools --> F[Flight Search]
+    Tools --> H[Hotel Finder]
+    Tools --> P[Places Discovery]
+    Tools --> W[Weather API]
+    Tools --> B[Budget Calc]
+    end
+    
+    Agent --> Final[Structured Itinerary]
+    Final --> UI
 ```
 
 ---
 
 ## 🚀 Installation & Setup
 
-### Prerequisites
-- Python 3.9 or higher
-- pip package manager
-- Anthropic API key (Claude AI)
+1.  **Clone & Enter**
+    ```bash
+    git clone https://github.com/pruthvirajtarode/Agentic-AI-Travel-Planner.git
+    cd Agentic-AI-Travel-Planner
+    ```
 
-### Step 1: Clone the Repository
-```bash
-git clone <your-repo-url>
-cd Agentic_AI_Travel_Planner
-```
+2.  **Environment Setup**
+    ```bash
+    python -m venv .venv
+    # Windows
+    .venv\Scripts\activate
+    # macOS/Linux
+    source .venv/bin/activate
+    ```
 
-### Step 2: Create Virtual Environment
-```bash
-python -m venv .venv
-```
+3.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Step 3: Activate Virtual Environment
-**Windows:**
-```bash
-.venv\Scripts\activate
-```
-
-**macOS/Linux:**
-```bash
-source .venv/bin/activate
-```
-
-### Step 4: Install Dependencies
-```bash
-pip install streamlit requests langchain-anthropic langgraph plotly folium streamlit-folium pillow python-dotenv
-```
-
-### Step 5: Set Up Environment Variables
-Create a `.env` file in the root directory:
-```env
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-```
-
-**Get your API key from:** https://console.anthropic.com/
+4.  **Configure API Key**
+    Create a `.env` file and add:
+    ```env
+    ANTHROPIC_API_KEY=your_key_here
+    ```
 
 ---
 
 ## ▶️ How to Run
 
-### Option 1: Using Command Line
-```bash
-# Activate virtual environment
-.venv\Scripts\activate
-
-# Set API key (Windows PowerShell)
-$env:ANTHROPIC_API_KEY='your_api_key_here'
-
-# Run the application
-streamlit run ui/app.py
-```
-
-### Option 2: Direct Run
 ```bash
 streamlit run ui/app.py
 ```
-
-The application will open in your default browser at `http://localhost:8501`
-
----
-
-## 📖 Usage Guide
-
-### Planning Your Trip
-
-1. **Enter Trip Details**
-   - From City (e.g., Delhi)
-   - Destination City (e.g., Goa)
-   - Trip Duration (1-7 days)
-
-2. **Click "Generate My Dream Trip"**
-   - AI analyzes your request
-   - Tools are called autonomously
-   - Itinerary is generated
-
-3. **Review Your Plan**
-   - AI reasoning and insights
-   - Flight details
-   - Hotel recommendations
-   - Weather forecast (chart + map)
-   - Day-wise itinerary
-   - Budget breakdown
-   - Travel route map
-
-4. **Interactive Features**
-   - Click on hotels → Opens Google Maps
-   - Click on places → Opens Google Maps
-   - Explore the route on interactive map
-   - Check packing checklist
-   - View food recommendations
-   - Read travel tips
-
----
-
-## 🏗️ Architecture
-
-### Agent Workflow
-
-```
-User Input → LangChain Agent → Tool Selection
-                ↓
-    ┌───────────┴───────────┐
-    ↓           ↓           ↓
-Flight Tool  Hotel Tool  Places Tool  Weather Tool  Budget Tool
-    ↓           ↓           ↓           ↓             ↓
-JSON Data   JSON Data   JSON Data   API Call    Calculations
-    ↓           ↓           ↓           ↓             ↓
-    └───────────┬───────────┘           │             │
-                ↓                       │             │
-        Agent Reasoning ←───────────────┴─────────────┘
-                ↓
-        Structured Output
-                ↓
-        Streamlit UI Display
-```
-
-### Tool Descriptions
-
-1. **Flight Search Tool**
-   - Reads `flights.json`
-   - Filters by source and destination
-   - Returns cheapest/fastest options
-
-2. **Hotel Recommendation Tool**
-   - Reads `hotels.json`
-   - Filters by city, rating, amenities
-   - Ranks by stars and price
-
-3. **Places Discovery Tool**
-   - Reads `places.json`
-   - Recommends attractions by type and rating
-   - Distributes across days
-
-4. **Weather Lookup Tool**
-   - Calls Open-Meteo API
-   - Provides 7-day forecast
-   - Returns temperature data
-
-5. **Budget Estimation Tool**
-   - Calculates total cost
-   - Flight + Hotel + Food + Local expenses
-   - Returns detailed breakdown
+*The app will automatically open at `http://localhost:8501`*
 
 ---
 
 ## 📸 Screenshots
 
-### Main Interface
-- Hero banner with tropical travel imagery
-- Glassmorphism input cards
-- Animated gradient background
+<details>
+<summary><b>Click to expand app preview</b></summary>
 
-### Trip Results
-- AI reasoning insights
-- Flight and hotel cards with clickable links
-- Interactive weather chart
-- Route map with markers
-- Day-wise itinerary with icons
-- Budget breakdown
+### 🌤️ Results Dashboard
+![Sample Results](ui/hero_banner.png)
+*(Replace with actual screenshot for better preview)*
 
-### Additional Features
-- Smart packing checklist
-- Location-specific food recommendations
-- Transportation guide
-- Travel tips and safety
-- Climate information
-
----
-
-## 🔮 Future Enhancements
-
-### Planned Features
-- [ ] Multi-city trip support
-- [ ] Flight booking integration
-- [ ] Hotel booking integration
-- [ ] User accounts and saved trips
-- [ ] Trip sharing functionality
-- [ ] PDF itinerary download
-- [ ] Email itinerary feature
-- [ ] Currency conversion
-- [ ] Multi-language support
-- [ ] Mobile app version
-
-### Advanced AI Features
-- [ ] Image recommendations for places
-- [ ] Restaurant recommendations
-- [ ] Activity booking
-- [ ] Real-time price alerts
-- [ ] Collaborative trip planning
-- [ ] Social travel recommendations
+</details>
 
 ---
 
 ## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+Contributions make the open-source community an amazing place to learn and create.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ---
 
 ## 📄 License
-
-This project is created for educational purposes.
+Education purposes only. 
 
 ---
 
 ## 👨‍💻 Author
-
 **Pruthviraj Shyamrao Tarode**
+[GitHub](https://github.com/pruthvirajtarode) • [LinkedIn](https://www.linkedin.com/in/pruthviraj-tarode/)
 
 ---
-
-## 🙏 Acknowledgments
-
-- **LangChain** for the agentic AI framework
-- **Anthropic** for Claude AI
-- **Streamlit** for the web framework
-- **Open-Meteo** for free weather API
-- **Folium** for interactive maps
-
----
-
-## 📞 Support
-
-For questions or issues, please:
-1. Check the documentation above
-2. Review the code comments
-3. Test with sample inputs
-4. Verify API key is set correctly
-
----
-
-## ✅ Project Completion Checklist
-
-- [x] Problem statement addressed
-- [x] Business use cases identified
-- [x] All primary objectives completed
-- [x] All secondary objectives completed
-- [x] JSON datasets integrated
-- [x] Weather API integrated
-- [x] LangChain agent implemented
-- [x] All 5 tools created
-- [x] Streamlit UI developed
-- [x] Code is modular and clean
-- [x] Error handling implemented
-- [x] Documentation complete
-- [x] Interactive features added
-- [x] Premium UI/UX design
-
----
-
-**Built with ❤️ using Python • Streamlit • Claude AI • LangChain • Folium • Plotly**
+<p align="center">
+  <b>Built with ❤️ using Python • Streamlit • Claude AI • LangChain</b>
+</p>
