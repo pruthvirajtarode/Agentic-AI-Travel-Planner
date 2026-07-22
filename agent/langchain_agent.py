@@ -1,12 +1,12 @@
 from langgraph.prebuilt import create_react_agent
-from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
 from agent.langchain_tools import *
 
 
 def run_agent(user_query: str):
-    # Create Claude model with system prompt built-in
-    llm = ChatAnthropic(
-        model="claude-3-haiku-20240307",
+    # Create OpenAI model with system prompt built-in
+    llm = ChatOpenAI(
+        model="gpt-4o-mini",
         temperature=0,
         max_tokens=4096
     )
