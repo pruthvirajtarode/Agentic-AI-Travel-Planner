@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Travel Planner ✈️</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet.js for Interactive Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Chart.js for Weather Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #f093fb;
+            --secondary: #f5576c;
+            --accent: #FFD700;
+            --bg-gradient: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+            50% { box-shadow: 0 8px 40px 0 rgba(240, 147, 251, 0.25); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.35) 0%, 
+                rgba(118, 75, 162, 0.35) 25%, 
+                rgba(240, 147, 251, 0.35) 50%, 
+                rgba(79, 172, 254, 0.35) 75%, 
+                rgba(0, 242, 254, 0.35) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            text-align: center;
+            border: 2px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-decor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            font-size: 3rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .hero-decor span {
+            animation: float 6s ease-in-out infinite;
+        }
+        .hero-decor span:nth-child(2n) { animation-delay: 2s; }
+        .hero-decor span:nth-child(3n) { animation-delay: 4s; }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent), var(--primary), #ffffff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Glassmorphism Input Form Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            animation: glow 6s ease-in-out infinite;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input-group label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group label i {
+            color: var(--primary);
+        }
+
+        .input-group input, .input-group select {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1a1a2e;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Slider Styles */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(245, 87, 108, 0.5);
+            transition: transform 0.1s;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .slider-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-width: 2.5rem;
+            text-align: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        /* Button */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        /* Spinner / Loader */
+        .loader-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--primary);
+            border-bottom: 8px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-container p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Result Sections (Hidden initially) */
+        .results-section {
+            display: none;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        /* AI Reasoning Card */
+        .ai-reasoning-card {
+            border: 3px solid transparent;
+            background: linear-gradient(#1a1a2e, #1a1a2e) padding-box,
+                        linear-gradient(135deg, var(--primary), var(--secondary), var(--accent), #43e97b) border-box;
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Layout Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards inside Results Grid */
+        .detail-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Flight Card Specific */
+        .flight-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+        }
+
+        /* Hotel Card Specific */
+        .hotel-card {
+            background: linear-gradient(135deg, rgba(250, 112, 154, 0.15) 0%, rgba(254, 225, 64, 0.15) 100%);
+        }
+
+        .hotel-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .hotel-stars {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .hotel-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0.5rem 0;
+        }
+
+        .amenities-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .amenity-tag {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-maps {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-maps:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        /* Budget Card Specific */
+        .budget-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(58, 71, 213, 0.2) 100%);
+        }
+
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.15rem;
+        }
+
+        .budget-total {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Map Container */
+        .map-wrapper {
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid var(--glass-border);
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Daywise Itinerary */
+        .itinerary-day {
+            background: linear-gradient(135deg, rgba(250, 112, 154, 0.12) 0%, rgba(254, 225, 64, 0.12) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .itinerary-day:hover {
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .itinerary-day h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .place-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid var(--secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .place-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .place-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .place-icon {
+            font-size: 1.75rem;
+        }
+
+        .place-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .place-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .btn-view-map {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-view-map:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #1a1a2e;
+        }
+
+        /* Column Layout for Essentials */
+        .essentials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .essential-box {
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            min-height: 350px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .packing-box {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(245, 87, 108, 0.2) 100%);
+        }
+
+        .food-box {
+            background: linear-gradient(135deg, rgba(250, 112, 154, 0.2) 0%, rgba(254, 225, 64, 0.2) 100%);
+            color: #ffffff;
+        }
+
+        .transport-box {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(58, 71, 213, 0.2) 100%);
+        }
+
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .box-icon {
+            font-size: 2.5rem;
+        }
+
+        .box-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .box-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            flex-grow: 1;
+        }
+
+        .box-list li {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .box-list li i {
+            color: var(--accent);
+        }
+
+        .food-item {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .transport-pro {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Tips & Safety Grid */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tips-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .weather-info-card {
+            background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .weather-stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .weather-avg-temp {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--secondary);
+            margin: 0.5rem 0;
+            text-shadow: 0 0 10px rgba(245, 87, 108, 0.3);
+        }
+
+        /* Action Buttons at the Bottom */
+        .actions-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(56, 239, 125, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(56, 239, 125, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            backdrop-filter: blur(10px);
+        }
+
+        footer .icons {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5rem;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            margin: 0.25rem 0;
+        }
+
+        /* Utility styles */
+        .error-message {
+            display: none;
+            background: rgba(245, 87, 108, 0.2);
+            border: 1px solid var(--secondary);
+            color: #ff9494;
+            padding: 1rem;
+            border-radius: 15px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .success-message {
+            display: none;
+            background: rgba(67, 233, 123, 0.2);
+            border: 1px solid #38f9d7;
+            color: #a3ffd6;
+            padding: 1rem;
+            border-radius: 15px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Weather chart container */
+        .chart-wrapper {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            height: 300px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-decor">
+                <span>✈️</span>
+                <span>🌍</span>
+                <span>🏖️</span>
+                <span>🧳</span>
+                <span>🏨</span>
+                <span>📸</span>
+            </div>
+            <h1>Agentic AI Travel Planner</h1>
+            <p>Your AI-Powered Trip Planning Assistant. Crafted with LangChain & OpenAI.</p>
+        </div>
+
+        <!-- Input Form Section -->
+        <div class="glass-card">
+            <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-suitcase" style="color: var(--primary);"></i> Enter Your Trip Details
+            </h2>
+            
+            <form id="plan-form" onsubmit="generateTrip(event)">
+                <div class="form-grid">
+                    <!-- From City -->
+                    <div class="input-group">
+                        <label for="src-city"><i class="fa-solid fa-location-dot"></i> From City</label>
+                        <input type="text" id="src-city" placeholder="e.g. Delhi" required>
+                    </div>
+                    
+                    <!-- Destination City -->
+                    <div class="input-group">
+                        <label for="dest-city"><i class="fa-solid fa-crosshairs"></i> Destination City</label>
+                        <input type="text" id="dest-city" placeholder="e.g. Goa" required>
+                    </div>
+
+                    <!-- Duration Slider -->
+                    <div class="input-group">
+                        <label for="duration"><i class="fa-solid fa-calendar-days"></i> Duration (Days)</label>
+                        <div class="slider-container">
+                            <input type="range" id="duration" min="1" max="7" value="3" oninput="updateSliderVal(this.value)">
+                            <span class="slider-value" id="duration-val">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-rocket"></i> Generate My Dream Trip
+                </button>
+            </form>
+
+            <div class="error-message" id="error-box"></div>
+            <div class="success-message" id="success-box"></div>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader-container" id="loader">
+            <div class="spinner"></div>
+            <p>🤖 AI is crafting your perfect trip...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="results">
+            
+            <!-- AI Insights -->
+            <div class="ai-reasoning-card">
+                <h3 class="section-title"><i class="fa-solid fa-robot"></i> AI Travel Insights</h3>
+                <div id="ai-reasoning-text"></div>
+            </div>
+
+            <!-- Left & Right Columns -->
+            <div class="results-grid">
+                
+                <!-- Left Column -->
+                <div>
+                    <!-- Flight Card -->
+                    <div class="detail-card flight-card">
+                        <h3 class="section-title" style="background: none; -webkit-text-fill-color: initial; color: white;">
+                            <i class="fa-solid fa-plane"></i> Flight Details
+                        </h3>
+                        <div id="flight-content"></div>
+                    </div>
+
+                    <!-- Hotel Card -->
+                    <div class="detail-card hotel-card">
+                        <h3 class="section-title" style="background: none; -webkit-text-fill-color: initial; color: white;">
+                            <i class="fa-solid fa-hotel"></i> Recommended Hotel
+                        </h3>
+                        <div id="hotel-content"></div>
+                    </div>
+
+                    <!-- Budget Card -->
+                    <div class="detail-card budget-card">
+                        <h3 class="section-title" style="background: none; -webkit-text-fill-color: initial; color: white;">
+                            <i class="fa-solid fa-wallet"></i> Budget Breakdown
+                        </h3>
+                        <div id="budget-content"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Weather Chart -->
+                    <h3 class="section-title"><i class="fa-solid fa-cloud-sun"></i> Weather Forecast</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="weather-chart"></canvas>
+                    </div>
+
+                    <!-- Route Map -->
+                    <h3 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Travel Route</h3>
+                    <div class="map-wrapper">
+                        <div id="map-container"></div>
+                    </div>
+
+                    <!-- Day-wise Itinerary -->
+                    <h3 class="section-title"><i class="fa-solid fa-calendar-week"></i> Day-wise Itinerary</h3>
+                    <div id="itinerary-content"></div>
+                </div>
+
+            </div>
+
+            <!-- Essentials Grid -->
+            <div class="essentials-grid">
+                
+                <!-- Packing List -->
+                <div class="essential-box packing-box">
+                    <div class="box-header">
+                        <span class="box-icon">🎒</span>
+                        <span class="box-title">Packing Checklist</span>
+                    </div>
+                    <ul class="box-list" id="packing-content"></ul>
+                </div>
+
+                <!-- Must try food -->
+                <div class="essential-box food-box">
+                    <div class="box-header">
+                        <span class="box-icon">🍽️</span>
+                        <span class="box-title">Must-Try Foods</span>
+                    </div>
+                    <div class="box-list" id="food-content" style="gap: 0.50rem;"></div>
+                </div>
+
+                <!-- Local Transport -->
+                <div class="essential-box transport-box">
+                    <div class="box-header">
+                        <span class="box-icon">🚕</span>
+                        <span class="box-title">Local Transport</span>
+                    </div>
+                    <ul class="box-list">
+                        <li><i class="fa-solid fa-check"></i> Uber / Ola Cabs</li>
+                        <li><i class="fa-solid fa-check"></i> Local Buses</li>
+                        <li><i class="fa-solid fa-check"></i> Bike Rentals (highly recommended)</li>
+                        <li><i class="fa-solid fa-check"></i> Auto-rickshaws</li>
+                        <li><i class="fa-solid fa-check"></i> Metro Transit (where available)</li>
+                    </ul>
+                    <div class="transport-pro">
+                        <strong>💡 Pro Tip:</strong> Download local transport apps before arriving at your destination!
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Tips & Safety -->
+            <div class="tips-grid">
+                
+                <div class="tips-card">
+                    <h3 class="section-title" style="margin-bottom: 1rem;"><i class="fa-solid fa-lightbulb"></i> Travel Tips</h3>
+                    <div style="line-height: 2; font-size: 1.05rem;">
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Book accommodations in advance<br>
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Keep digital & physical copies of documents<br>
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Learn basic local phrases<br>
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Stay hydrated throughout the day<br>
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Respect local customs & culture<br>
+                        <i class="fa-solid fa-check" style="color: var(--accent);"></i> Keep emergency contacts handy
+                    </div>
+                </div>
+
+                <div class="weather-info-card">
+                    <h3 class="section-title" style="margin-bottom: 1rem; color: #1a1a2e;"><i class="fa-solid fa-circle-info"></i> Best Time to Visit</h3>
+                    <div class="weather-stat-box">
+                        <div style="font-weight: 700; color: #1a1a2e; font-size: 1.1rem;">Trip Average Temperature</div>
+                        <div class="weather-avg-temp" id="avg-temp-text">0.0°C</div>
+                        <div style="color: #333;" id="weather-description">Loading...</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Actions (Download) -->
+            <div class="actions-container">
+                <button class="btn-download" onclick="downloadItinerary()">
+                    <i class="fa-solid fa-download"></i> Download Complete Itinerary
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="icons">✈️ 🌍 🏨 🗺️</div>
+            <p>Built with ❤️ using FastAPI, Leaflet, and Chart.js</p>
+            <p>© 2026 Agentic AI Travel Planner | Powered by OpenAI & LangChain 🤖</p>
+        </footer>
+
+    </div>
+
+    <script>
+        let weatherChart = null;
+        let map = null;
+        let globalPlanData = null; // Store for downloading
+
+        function updateSliderVal(val) {
+            document.getElementById('duration-val').textContent = val;
+        }
+
+        async function generateTrip(e) {
+            e.preventDefault();
+            
+            const src = document.getElementById('src-city').value;
+            const dest = document.getElementById('dest-city').value;
+            const days = document.getElementById('duration').value;
+            
+            const errorBox = document.getElementById('error-box');
+            const successBox = document.getElementById('success-box');
+            const loader = document.getElementById('loader');
+            const results = document.getElementById('results');
+
+            errorBox.style.display = 'none';
+            successBox.style.display = 'none';
+            results.style.display = 'none';
+            loader.style.display = 'flex';
+
+            try {
+                const response = await fetch(`/api/plan?src=${encodeURIComponent(src)}&dest=${encodeURIComponent(dest)}&days=${days}`);
+                if (!response.ok) {
+                    throw new Error(`API returned status ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data.success) {
+                    globalPlanData = data;
+                    renderPlan(data, src, dest, days);
+                    
+                    loader.style.display = 'none';
+                    successBox.style.display = 'block';
+                    successBox.textContent = "✅ Your Personalized Travel Plan is Ready!";
+                    results.style.display = 'flex';
+                    
+                    // Trigger refit map after element is displayed
+                    setTimeout(() => {
+                        if (map) {
+                            map.invalidateSize();
+                        }
+                    }, 200);
+
+                    // Scroll to results
+                    results.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error("API call was unsuccessful");
+                }
+            } catch (err) {
+                console.error(err);
+                loader.style.display = 'none';
+                errorBox.style.display = 'block';
+                errorBox.textContent = `❌ Error: ${err.message || "Failed to generate your plan. Please check your API keys or try again."}`;
+            }
+        }
+
+        function renderPlan(data, src, dest, days) {
+            const plan = data.plan;
+            const budget = data.budget;
+            
+            // 1. AI Insights
+            document.getElementById('ai-reasoning-text').innerHTML = formatMarkdownLike(data.reasoning);
+
+            // 2. Flights
+            const flightContent = document.getElementById('flight-content');
+            if (plan.flight.message) {
+                flightContent.innerHTML = `<p style="color: var(--accent); font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> ${plan.flight.message}</p>`;
+            } else {
+                flightContent.innerHTML = `
+                    <div style="font-size: 1.15rem; line-height: 1.8;">
+                        <p><strong>Flight:</strong> ${plan.flight.flight_number || 'N/A'}</p>
+                        <p><strong>From:</strong> ${plan.flight.from || src}</p>
+                        <p><strong>To:</strong> ${plan.flight.to || dest}</p>
+                        <p><strong>Duration:</strong> ${plan.flight.duration || 'N/A'}</p>
+                        <p style="font-size: 1.5rem; font-weight: 700; color: var(--accent); margin-top: 0.5rem;">Price: ₹${plan.flight.price.toLocaleString()}</p>
+                    </div>
+                `;
+            }
+
+            // 3. Hotel
+            const hotelContent = document.getElementById('hotel-content');
+            if (plan.hotel.message) {
+                hotelContent.innerHTML = `<p style="color: var(--accent); font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> ${plan.hotel.message}</p>`;
+            } else {
+                const searchQ = `${plan.hotel.name} ${plan.hotel.city}`;
+                const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchQ)}`;
+                
+                let amenitiesHTML = '';
+                if (plan.hotel.amenities && plan.hotel.amenities.length) {
+                    amenitiesHTML = `<div class="amenities-list">` + 
+                        plan.hotel.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('') + 
+                        `</div>`;
+                }
+
+                hotelContent.innerHTML = `
+                    <div class="hotel-name">${plan.hotel.name}</div>
+                    <div class="hotel-stars">
+                        ${'★'.repeat(plan.hotel.stars)}${'☆'.repeat(5 - plan.hotel.stars)}
+                        <span style="color: white; font-size: 0.95rem; margin-left: 0.5rem;">(${plan.hotel.stars} Star Hotel in ${plan.hotel.city})</span>
+                    </div>
+                    <div class="hotel-price">₹${plan.hotel.price_per_night.toLocaleString()} / night</div>
+                    ${amenitiesHTML}
+                    <p style="margin-top: 0.5rem;"><strong>Total Stay Cost (${days} nights):</strong> ₹${(plan.hotel.price_per_night * days).toLocaleString()}</p>
+                    <a href="${mapsLink}" target="_blank" class="btn-maps">
+                        <i class="fa-solid fa-map-pin"></i> View on Google Maps
+                    </a>
+                `;
+            }
+
+            // 4. Budget
+            const budgetContent = document.getElementById('budget-content');
+            budgetContent.innerHTML = `
+                <div class="budget-item"><span>✈️ Flight Cost</span><span>₹${budget.flight_cost.toLocaleString()}</span></div>
+                <div class="budget-item"><span>🏨 Hotel Cost (${days} nights)</span><span>₹${budget.hotel_cost.toLocaleString()}</span></div>
+                <div class="budget-item"><span>🍽️ Food & Local</span><span>₹${budget.food_and_local.toLocaleString()}</span></div>
+                <div class="budget-total"><span>Total Estimate</span><span>₹${budget.total_cost.toLocaleString()}</span></div>
+            `;
+
+            // 5. Weather Chart
+            renderWeatherChart(plan.weather);
+
+            // 6. Map
+            initMap(data.src_coords, data.dest_coords, src, dest);
+
+            // 7. Day-wise Itinerary
+            const itineraryContent = document.getElementById('itinerary-content');
+            itineraryContent.innerHTML = '';
+            
+            const iconMap = {
+                "museum": "🏛️",
+                "fort": "🏰",
+                "market": "🛍️",
+                "temple": "🛕",
+                "beach": "🏖️",
+                "park": "🌳"
+            };
+
+            for (const [day, places] of Object.entries(plan.itinerary)) {
+                let placesHTML = '';
+                
+                places.forEach(p => {
+                    const icon = iconMap[p.type] || "📍";
+                    const searchPlace = `${p.name} ${dest}`;
+                    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchPlace)}`;
+                    
+                    placesHTML += `
+                        <div class="place-item">
+                            <div class="place-info">
+                                <span class="place-icon">${icon}</span>
+                                <div>
+                                    <div class="place-title">${p.name}</div>
+                                    <div class="place-meta">⭐ ${p.rating} • ${p.type.toUpperCase()}</div>
+                                </div>
+                            </div>
+                            <a href="${mapsLink}" target="_blank" class="btn-view-map">
+                                Map <i class="fa-solid fa-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+
+                itineraryContent.innerHTML += `
+                    <div class="itinerary-day">
+                        <h3>${day}</h3>
+                        ${placesHTML}
+                    </div>
+                `;
+            }
+
+            // 8. Dynamic Packing & Essentials
+            const temps = plan.weather || [];
+            const avgTemp = temps.length ? (temps.reduce((a,b)=>a+b, 0) / temps.length) : 25;
+            
+            document.getElementById('avg-temp-text').textContent = `${avgTemp.toFixed(1)}°C`;
+            
+            const weatherDesc = document.getElementById('weather-description');
+            const packingList = document.getElementById('packing-content');
+            
+            const basicPacking = [
+                "Comfortable walking shoes",
+                "Sunscreen & sunglasses",
+                "Phone charger & power bank",
+                "Camera / Travel journal",
+                "Medications & basic first aid",
+                "Travel documents & ID copies"
+            ];
+
+            if (avgTemp > 30) {
+                weatherDesc.innerHTML = "🌡️ Hot weather - Pack light & stay hydrated!";
+                basicPacking.push("Lightweight cotton clothes", "Sunhat / Cap", "Reusable water bottle");
+            } else if (avgTemp < 20) {
+                weatherDesc.innerHTML = "❄️ Cool weather - Layering is key!";
+                basicPacking.push("Warm jacket / Fleece", "Sweaters / Hoodies", "Umbrella or windbreaker");
+            } else {
+                weatherDesc.innerHTML = "☀️ Pleasant weather - Perfect for sightseeing!";
+                basicPacking.push("Light jacket / Cardigan", "Mix of casual layers");
+            }
+
+            packingList.innerHTML = basicPacking.map(item => `<li><i class="fa-solid fa-circle-check"></i> ${item}</li>`).join('');
+
+            // Food recommendations
+            const foodRecommendations = {
+                "goa": ["Fish Curry Rice", "Bebinca", "Vindaloo", "Xacuti", "Feni (drink)"],
+                "delhi": ["Butter Chicken", "Chole Bhature", "Paranthas", "Street Chaat", "Kebabs"],
+                "mumbai": ["Vada Pav", "Pav Bhaji", "Bombay Duck", "Misal Pav", "Street Food"],
+                "bangalore": ["Masala Dosa", "Idli Vada", "Filter Coffee", "Bisi Bele Bath", "Mysore Pak"],
+                "jaipur": ["Dal Baati Churma", "Laal Maas", "Ghewar", "Pyaaz Kachori", "Lassi"]
+            };
+
+            const destFoods = foodRecommendations[dest.toLowerCase().trim()] || [
+                "Local cuisine specialties",
+                "Famous street foods",
+                "Traditional regional dishes",
+                "Fresh seasonal fruits",
+                "Local desserts & sweets"
+            ];
+
+            document.getElementById('food-content').innerHTML = destFoods.map(food => `
+                <div class="food-item">
+                    <i class="fa-solid fa-utensils"></i> ${food}
+                </div>
+            `).join('');
+        }
+
+        function renderWeatherChart(weatherData) {
+            const ctx = document.getElementById('weather-chart').getContext('2d');
+            
+            if (weatherChart) {
+                weatherChart.destroy();
+            }
+
+            const labels = weatherData.map((_, i) => `Day ${i + 1}`);
+
+            weatherChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: weatherData,
+                        borderColor: '#f093fb',
+                        backgroundColor: 'rgba(240, 147, 251, 0.15)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#f5576c',
+                        pointBorderColor: '#ffffff',
+                        pointHoverRadius: 8,
+                        pointRadius: 6,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initMap(srcCoords, destCoords, srcName, destName) {
+            if (map) {
+                map.remove();
+            }
+
+            const centerLat = (srcCoords[0] + destCoords[0]) / 2;
+            const centerLon = (srcCoords[1] + destCoords[1]) / 2;
+            
+            map = L.map('map-container').setView([centerLat, centerLon], 5);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            const greenIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const redIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const marker1 = L.marker(srcCoords, {icon: greenIcon}).addTo(map)
+                .bindPopup(`<b>${srcName}</b><br>Departure`);
+
+            const marker2 = L.marker(destCoords, {icon: redIcon}).addTo(map)
+                .bindPopup(`<b>${destName}</b><br>Destination`);
+
+            const line = L.polyline([srcCoords, destCoords], {
+                color: '#f093fb',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '8, 8'
+            }).addTo(map);
+
+            const group = new L.featureGroup([marker1, marker2]);
+            map.fitBounds(group.getBounds().pad(0.2));
+        }
+
+        function formatMarkdownLike(text) {
+            // Very simple replacement of markdown-like syntax for HTML display
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/### (.*?)\n/g, '<h4 style="margin-top: 1rem; color: var(--primary); font-size: 1.3rem;">$1</h4>')
+                .replace(/## (.*?)\n/g, '<h3 style="margin-top: 1.5rem; color: var(--primary); font-size: 1.5rem;">$1</h3>')
+                .replace(/- (.*?)\n/g, '• $1<br>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function downloadItinerary() {
+            if (!globalPlanData) return;
+
+            const plan = globalPlanData.plan;
+            const budget = globalPlanData.budget;
+            const src = document.getElementById('src-city').value;
+            const dest = document.getElementById('dest-city').value;
+            const days = document.getElementById('duration').value;
+
+            let text = `AGENTIC AI TRAVEL PLANNER\nTrip Itinerary\n=====================================================\n\n`;
+            text += `📍 TRIP DETAILS\nFrom: ${src}\nTo: ${dest}\nDuration: ${days} days\n\n`;
+            
+            text += `✈️ FLIGHT INFORMATION\n`;
+            if (plan.flight.message) {
+                text += `${plan.flight.message}\n`;
+            } else {
+                text += `Flight: ${plan.flight.flight_number || 'N/A'}\n`;
+                text += `From: ${plan.flight.from || src}\nTo: ${plan.flight.to || dest}\n`;
+                text += `Duration: ${plan.flight.duration || 'N/A'}\nPrice: ₹${plan.flight.price.toLocaleString()}\n`;
+            }
+            text += `\n`;
+
+            text += `🏨 HOTEL RECOMMENDATION\n`;
+            if (plan.hotel.message) {
+                text += `${plan.hotel.message}\n`;
+            } else {
+                text += `Hotel: ${plan.hotel.name}\nCity: ${plan.hotel.city}\nRating: ${plan.hotel.stars} Stars\n`;
+                text += `Price per night: ₹${plan.hotel.price_per_night.toLocaleString()}\n`;
+                text += `Total cost (${days} nights): ₹${(plan.hotel.price_per_night * days).toLocaleString()}\n`;
+            }
+            text += `\n`;
+
+            text += `📅 DAY-WISE ITINERARY\n`;
+            for (const [day, places] of Object.entries(plan.itinerary)) {
+                text += `\n${day}:\n`;
+                places.forEach(p => {
+                    text += `  • ${p.name} (${p.type.toUpperCase()}) - Rating: ${p.rating}⭐\n`;
+                });
+            }
+            text += `\n`;
+
+            text += `🌤️ WEATHER FORECAST\n`;
+            plan.weather.forEach((temp, i) => {
+                text += `Day ${i+1}: ${temp}°C\n`;
+            });
+            text += `\n`;
+
+            text += `💰 BUDGET BREAKDOWN\n`;
+            text += `Flight Cost: ₹${budget.flight_cost.toLocaleString()}\n`;
+            text += `Hotel Cost (${days} nights): ₹${budget.hotel_cost.toLocaleString()}\n`;
+            text += `Food & Local Expenses: ₹${budget.food_and_local.toLocaleString()}\n`;
+            text += `-----------------------------\n`;
+            text += `TOTAL ESTIMATED COST: ₹${budget.total_cost.toLocaleString()}\n\n`;
+            text += `=====================================================\n`;
+            text += `Generated by Agentic AI Travel Planner\n`;
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.download = `Trip_${src}_to_${dest}_${days}days.txt`;
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.click();
+        }
+    </script>
+</body>
+</html>
